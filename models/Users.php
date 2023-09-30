@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "users".
@@ -35,15 +38,16 @@ class Users extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['iduser', 'username', 'password', 'role', 'userkey', 'email', 'status', 'phone'], 'required'],
+            [['iduser', 'username', 'password', 'role', 'idbuildings'], 'required'],
             [['role', 'status'], 'integer'],
             [['lastlogin'], 'safe'],
             [['iduser', 'name', 'userkey'], 'string', 'max' => 30],
             [['username', 'phone'], 'string', 'max' => 20],
             [['password', 'lastname', 'email'], 'string', 'max' => 50],
-            [['userkey'], 'unique'],
+            [['userkey', 'username'], 'unique'],
             [['email'], 'unique'],
             [['iduser'], 'unique'],
+            [['idbuildings'], 'safe'],
         ];
     }
 
@@ -65,5 +69,43 @@ class Users extends \yii\db\ActiveRecord
             'status' => 'Status',
             'phone' => 'Phone',
         ];
+    }
+
+    public $idbuildings;
+
+    public static function getUserBuilding($iduser, $ismap = false, $isdp = false) {
+        $m = (new Query())->select(['b.*'])
+            ->from(['m' => TrsMap::tableName()])
+            ->innerJoin(['b' => MstBuilding::tableName()], "m.idto = b.idbuilding")
+            ->where(['idfrom' => $iduser])
+            ->all();
+
+        if ($ismap) {
+            return ArrayHelper::map($m, 'idbuilding', 'buildingname');
+        } else if ($isdp) {
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $m,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+            ]);
+
+            return $dataProvider;
+        }
+        return ArrayHelper::getColumn($m, 'idbuilding');
+    }
+
+    public static function saveBuildings($idbuilds, $iduser, &$msg = null) {
+        foreach ($idbuilds as $perBuild) {
+            $mmap = new TrsMap();
+            $mmap->idmap = uniqid();
+            $mmap->idfrom = $iduser;
+            $mmap->idto = $perBuild;
+            $mmap->type = 1;
+            if (!$mmap->save()) {
+                $msg = json_encode($mmap->getErrors());
+                break;
+            }
+        }
     }
 }

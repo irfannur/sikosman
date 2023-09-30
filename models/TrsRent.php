@@ -46,7 +46,7 @@ class TrsRent extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['idtrsrent', 'idroom', 'idtenant', 'agreeprice', 'rentdate', 'day', 'dayplan', 'daytotal', 'pricetotal', 'rentperiodname', 'startrent'], 'required'],
+            [['idbuilding', 'idtrsrent', 'idroom', 'idtenant', 'agreeprice', 'rentdate', 'day', 'dayplan', 'daytotal', 'pricetotal', 'rentperiodname', 'startrent'], 'required'],
             [['agreeprice', 'debt', 'day', 'dayplan', 'daytotal', 'pricetotal'], 'integer'],
             [['rentdate', 'startrent', 'endrent', 'idrentperiod', 'injurydate', 'pretotal', 'status'], 'safe'],
             [['note'], 'string'],

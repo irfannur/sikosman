@@ -33,7 +33,7 @@ class AdminController extends Controller {
                     [
                         'controllers' => ['apps/checkout', 'apps/customer'],
                         'allow' => true,
-                        'roles' => [Rolename::CUSTOMER],
+                        'roles' => [Rolename::OPERATOR],
                     ],
                 ],
             ],

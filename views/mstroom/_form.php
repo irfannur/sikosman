@@ -14,9 +14,19 @@ use yii\bootstrap4\ActiveForm;
 /** @var ActiveForm $form */
 ?>
 
-<div class="mst-room-form">
+<div class="mst-room-form"><br>
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['layout' => 'horizontal', // Set the layout to 'horizontal'
+        'fieldConfig' => [
+            'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}",
+            'horizontalCssClasses' => [
+                'label' => 'col-sm-2', // Set the column width for labels
+                'offset' => 'col-sm-offset-2', // Set the offset width for input fields
+                'wrapper' => 'col-sm-10', // Set the column width for input fields
+                'error' => '', // Leave this empty to suppress error messages for now
+                'hint' => '', // Leave this empty to suppress hints for now
+            ],
+        ],]); ?>
 
     <div class="row">
 

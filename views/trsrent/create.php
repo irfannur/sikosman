@@ -6,6 +6,8 @@ use app\models\MstTenant;
 use app\models\RefRentperiod;
 use app\models\TrsRent;
 use app\models\TrsRentdet;
+use app\models\User;
+use app\models\Users;
 use kartik\date\DatePicker;
 use kartik\depdrop\DepDrop;
 use kartik\money\MaskMoney;
@@ -34,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <?=
                 $form->field($model, 'idbuilding')->widget(Select2::classname(), [
-                    'data' => MstBuilding::getListBuilding(),
+                    'data' => Users::getUserBuilding(User::me()->iduser, true),
                     'options' => [
                         'id' => 'idbuilding',
                         'class' => 'form-control',

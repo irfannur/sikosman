@@ -23,22 +23,6 @@ use yii\web\Response;
  */
 class TrsrentController extends AdminController {
 
-    /**
-     * @inheritDoc
-     */
-    public function behaviors() {
-        return array_merge(
-                parent::behaviors(),
-                [
-                    'verbs' => [
-                        'class' => VerbFilter::className(),
-                        'actions' => [
-                            'delete' => ['POST'],
-                        ],
-                    ],
-                ]
-        );
-    }
 
     /**
      * Lists all TrsRent models.
