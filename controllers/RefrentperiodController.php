@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\AdminController;
 use app\models\RefRentperiod;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -11,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * RefrentperiodController implements the CRUD actions for RefRentperiod model.
  */
-class RefrentperiodController extends Controller
+class RefrentperiodController extends AdminController
 {
     /**
      * @inheritDoc

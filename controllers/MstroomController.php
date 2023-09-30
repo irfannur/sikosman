@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\AdminController;
 use app\models\MstRoom;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use yii\web\Response;
 /**
  * MstroomController implements the CRUD actions for MstRoom model.
  */
-class MstroomController extends Controller {
+class MstroomController extends AdminController {
 
     /**
      * @inheritDoc

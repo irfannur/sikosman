@@ -49,7 +49,6 @@ AppAsset::register($this);
                             ['label' => 'Anak Kos', 'url' => '/msttenant/index'],
                         ],
                     ],
-                    ['label' => 'Contact', 'url' => ['/site/contact']],
                     Yii::$app->user->isGuest ? (
                             ['label' => 'Login', 'url' => ['/site/login']]
                             ) : (

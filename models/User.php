@@ -2,45 +2,57 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
-{
-    public $id;
-    public $username;
-    public $password;
+class User extends Users implements \yii\web\IdentityInterface {
+
     public $authKey;
     public $accessToken;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
+    /**
+     * @return \app\models\User
+     */
+    public static function me() {
+        return \Yii::$app->user->identity;
+    }
 
+    public function fields() {
+        $fields = parent::fields();
+        unset($fields['password']);
+        return array_merge($fields, ['accessToken', 'authKey']);
+    }
+
+    public static function generateToken($id) {
+        $token = [
+            "iss" => "http://qyaraofficial.com",
+            "aud" => "qyara.v1",
+            "uid" => $id,
+            "iat" => time(),
+            "nbf" => time(),
+            "exp" => time() + (1000 * 60 * 60 * 24 * 7)
+        ];
+
+        return JWT::encode($token, Yii::$app->params['secret']);
+    }
+
+    public static function validateToken($token) {
+        try {
+            $payload = JWT::decode($token, Yii::$app->params['secret'], ['HS256']);
+            return User::findIdentity($payload->uid);
+        } catch (Exception $ex) {
+            return null;
+        }
+    }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public static function findIdentity($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+    public static function findIdentity($id) {
+        return User::findOne($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
+    public static function findIdentityByAccessToken($token, $type = null) {
         foreach (self::$users as $user) {
             if ($user['accessToken'] === $token) {
                 return new static($user);
@@ -56,38 +68,33 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+    public static function findByUsername($username) {
+        $u = User::findOne(['username' => $username]);
+        $e = User::find()->where(['UPPER(email)' => strtoupper($username)])->one();
+        if ($u)
+            return $u;
+        if ($e)
+            return $e;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getId()
-    {
-        return $this->id;
+    public function getId() {
+        return $this->iduser;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAuthKey()
-    {
+    public function getAuthKey() {
         return $this->authKey;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAuthKey($authKey)
-    {
+    public function validateAuthKey($authKey) {
         return $this->authKey === $authKey;
     }
 
@@ -97,8 +104,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      * @param string $password password to validate
      * @return bool if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+    public function validatePassword($password) {
+        return $this->password === md5($password);
     }
+
 }

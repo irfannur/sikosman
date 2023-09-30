@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\AdminController;
 use app\helpers\DateUtils;
 use app\helpers\Utils;
 use app\models\RefRentperiod;
@@ -20,7 +21,7 @@ use yii\web\Response;
 /**
  * TrsrentController implements the CRUD actions for TrsRent model.
  */
-class TrsrentController extends Controller {
+class TrsrentController extends AdminController {
 
     /**
      * @inheritDoc

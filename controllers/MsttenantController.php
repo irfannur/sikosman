@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\AdminController;
 use app\models\MstTenant;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use yii\web\Response;
 /**
  * MsttenantController implements the CRUD actions for MstTenant model.
  */
-class MsttenantController extends Controller {
+class MsttenantController extends AdminController {
 
     /**
      * @inheritDoc
